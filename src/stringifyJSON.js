@@ -1,26 +1,37 @@
  (function IIFE() {
 
-  function typeOf(obj) {
+  var p = function (str) {
+    console.log(str);
+  };
+
+  var typeOf = function(obj) {
     return Object.prototype.toString.call(obj);
   }
 
-  function stringifyJSON(obj) {
+  var stringifyJSON = function(obj) {
     var result = '';
     var val;
     console.log(typeOf(obj));
 
     switch ( typeOf(obj) ) {
+      case '[object Boolean]':
+        result += obj;
+        break;
+
+      case '[object Null]':
+        result += obj;
+        break;
+
       case '[object String]':
-        console.log("in string");
-        result += '"' + val + '"';
+        result += '"' + obj + '"';
         break;
 
       case '[object Number]':
-        console.log("in number");
         result += obj;
         break;
 
       case '[object Array]':
+        console.log('in Array');
         for (key in obj) {
           val = obj[key];
           result += ['[', stringifyJSON(val), ']'].join('');
@@ -45,7 +56,7 @@
 
     // remove comma on last val
     return result.slice(0,-1);
-  }
+  };
 
   this.stringifyJSON = stringifyJSON;
 
