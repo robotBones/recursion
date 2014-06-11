@@ -28,8 +28,8 @@
 
       case '[object Array]':
         result += '[';
-        for (key in obj) {
-          val = obj[key];
+        for (var i = 0; i < obj.length; i++) {
+          val = obj[i];
           tempList.push(stringifyJSON(val));
         }
         result += tempList.join(",");
@@ -45,8 +45,9 @@
             tempList.push('"' + key + '":' + stringifyJSON(val));
           }
         }
-          result += tempList.join(",");
-          result += '}';
+          // join() won't add any commas when tempList is an empty array
+        result += tempList.join(",");
+        result += '}';
         break;
 
       default:
