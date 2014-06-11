@@ -39,10 +39,12 @@
       case '[object Object]':
         result += '{';
         for (key in obj) {
-          val = obj[key];
-          // functions and 'undefined' are not allowed in JSON
-          if ( typeof val !== 'function' && typeof val !== 'undefined') {
-            tempList.push('"' + key + '":' + stringifyJSON(val));
+          if ( obj.hasOwnProperty([key]) ) {
+            val = obj[key];
+            // functions and 'undefined' are not allowed in JSON
+            if ( typeof val !== 'function' && typeof val !== 'undefined') {
+              tempList.push('"' + key + '":' + stringifyJSON(val));
+            }
           }
         }
           // join() won't add any commas when tempList is an empty array
