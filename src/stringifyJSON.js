@@ -1,64 +1,52 @@
-// this is what you would do if you liked things to be easy:
-// var stringifyJSON = JSON.stringify;
+(function IIFE() {
 
-// but you don't so you're going to write it from scratch:
-function howNested(n) {
-  var thingy = "*";
-  var result = "";
-  for ( var i = 0; i < n; i++) {
-      result += thingy;
+  function typeOf(obj) {
+    return Object.prototype.toString.call(obj);
   }
-  return result;
-}
-var x = {
-  a: 1,
-  2: "two",
-  c: [],
-  d: {2: [3,4]},
-  e: "all above"
-}
-console.log();
-console.log();
-console.log("//////////////////////////////////////////////////////////////////////");
-var layer = 0;
-var stringifyJSON = function(obj) {
-  // your code goes here
-  var JSON = '';
-  layer += 1
 
-  for (key in obj) {
-    console.log(howNested(layer) + Object.prototype.toString.call(obj[key]) + " - " + key + ":",obj[key]);
-    var type = Object.prototype.toString.call(obj[key]);
-    if (type !== '[object Object]' && type !== '[object Array]') {
-      JSON += key + ":" + obj[key] + ",";
+  function stringifyJSON(obj) {
+    var result = '';
+    var val;
+    for (key in obj) {
+      val = obj[key];
+
+      if (typeOf(obj) !== '[object Array]') {
+        result += '"' + key + '":';
+      }
+
+      switch ( typeOf(val) ) {
+        case '[object String]':
+          result += '"' + val + '"';
+          break;
+
+        case '[object Number]':
+          result += val;
+          break;
+
+        case '[object Array]':
+          result += stringifyJSON(val);
+          break;
+
+        case '[object Object]':
+          result += stringifyJSON(val);
+          break;
+
+        default:
+          throw new Error('Something happend in stringifyJSON switch statement.');
+          break;
+      }
+      // add comma seperator after every key:val
+      result += ',';
+    }// end of object traversal
+    // remove comma on last val
+    result = result.slice(0,-1);
+
+    if (typeOf(obj) === '[object Object]') {
+      return ['{', result, '}'].join('');
+    } else {
+      return ['[', result, ']'].join('');
     }
-    else if (type === '[object Object]') {
-      JSON += key + ":" + stringifyJSON(obj[key]);
-    } else if (type === '[object Array]') {
-      var ar =
-      JSON += [key,":","[", stringifyJSON(obj[key]), "]"].join("");
-    }
   }
 
-
-  layer -= 1;
-  if (layer === 0) {
-    JSON = JSON.slice(0,-1);
-    return ['{',JSON,'}'].join("")
-  } else {
-    return JSON;
-  }
-
-};
-
-
-var output = stringifyJSON(x);
-console.log("//////////////////////////////////////////////////////////////////////");
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
-console.log("object: ",x);
-console.log("JSON: "+JSON.stringify(x));
-console.log("myJunk: ", output);
+  this.stringifyJSON = stringifyJSON;
+})();
