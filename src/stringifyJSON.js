@@ -1,17 +1,13 @@
  (function IIFE() {
 
-  var p = function (str) {
-    console.log(str);
-  };
-
   var typeOf = function(obj) {
     return Object.prototype.toString.call(obj);
   }
 
   var stringifyJSON = function(obj) {
     var result = '';
+    var tempList = []; // using Array.join(",") to deal with commas in objects and arrays
     var val;
-    console.log(typeOf(obj));
 
     switch ( typeOf(obj) ) {
       case '[object Boolean]':
@@ -31,31 +27,34 @@
         break;
 
       case '[object Array]':
-        console.log('in Array');
+        result += '[';
         for (key in obj) {
           val = obj[key];
-          result += ['[', stringifyJSON(val), ']'].join('');
+          tempList.push(stringifyJSON(val));
         }
+        result += tempList.join(",");
+        result += ']';
         break;
 
       case '[object Object]':
+        result += '{';
         for (key in obj) {
-          result += '"' + key + '":';
           val = obj[key];
-          result += ['{', stringifyJSON(val), '}'].join('');
+          // functions and 'undefined' are not allowed in JSON
+          if ( typeof val !== 'function' && typeof val !== 'undefined') {
+            tempList.push('"' + key + '":' + stringifyJSON(val));
+          }
         }
+          result += tempList.join(",");
+          result += '}';
         break;
 
       default:
-        console.log('in default');
+        throw new Error("switch statement defaulted!");
         break;
     }
-    // add comma seperator after every key:val
-    result += ',';
-    console.log(result);
 
-    // remove comma on last val
-    return result.slice(0,-1);
+    return result;
   };
 
   this.stringifyJSON = stringifyJSON;
