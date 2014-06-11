@@ -1,4 +1,4 @@
-(function IIFE() {
+ (function IIFE() {
 
   function typeOf(obj) {
     return Object.prototype.toString.call(obj);
@@ -7,46 +7,46 @@
   function stringifyJSON(obj) {
     var result = '';
     var val;
-    for (key in obj) {
-      val = obj[key];
+    console.log(typeOf(obj));
 
-      if (typeOf(obj) !== '[object Array]') {
-        result += '"' + key + '":';
-      }
+    switch ( typeOf(obj) ) {
+      case '[object String]':
+        console.log("in string");
+        result += '"' + val + '"';
+        break;
 
-      switch ( typeOf(val) ) {
-        case '[object String]':
-          result += '"' + val + '"';
-          break;
+      case '[object Number]':
+        console.log("in number");
+        result += obj;
+        break;
 
-        case '[object Number]':
-          result += val;
-          break;
+      case '[object Array]':
+        for (key in obj) {
+          val = obj[key];
+          result += ['[', stringifyJSON(val), ']'].join('');
+        }
+        break;
 
-        case '[object Array]':
-          result += stringifyJSON(val);
-          break;
+      case '[object Object]':
+        for (key in obj) {
+          result += '"' + key + '":';
+          val = obj[key];
+          result += ['{', stringifyJSON(val), '}'].join('');
+        }
+        break;
 
-        case '[object Object]':
-          result += stringifyJSON(val);
-          break;
-
-        default:
-          throw new Error('Something happend in stringifyJSON switch statement.');
-          break;
-      }
-      // add comma seperator after every key:val
-      result += ',';
-    }// end of object traversal
-    // remove comma on last val
-    result = result.slice(0,-1);
-
-    if (typeOf(obj) === '[object Object]') {
-      return ['{', result, '}'].join('');
-    } else {
-      return ['[', result, ']'].join('');
+      default:
+        console.log('in default');
+        break;
     }
+    // add comma seperator after every key:val
+    result += ',';
+    console.log(result);
+
+    // remove comma on last val
+    return result.slice(0,-1);
   }
 
   this.stringifyJSON = stringifyJSON;
+
 })();
