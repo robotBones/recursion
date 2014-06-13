@@ -9,19 +9,18 @@ var getElementsByClassName = function(className) {
   var els = [];
   var node = document.body;
 
-  var recurser = function(node) {
+  // walking the dom
+  var recursiveGet = function(node) {
     var children = node.childNodes;
 
     if ( node.nodeType === 1 && node.classList.contains(className) ) {
       els.push(node);
     }
 
-    for (var i = 0; i < children.length; i++) {
-      recurser(children[i]);
-    }
+    _.each(children, recursiveGet);
   }
 
-  recurser(node);
+  recursiveGet(node);
 
   return els;
 };
