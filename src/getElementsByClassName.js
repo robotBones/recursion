@@ -13,12 +13,12 @@ var getElementsByClassName = function(className) {
   var recursiveGet = function(node) {
     var children = node.childNodes;
 
-    if ( node.nodeType === 1 && node.classList.contains(className) ) {
+    if ( node.nodeType === Node.ELEMENT_NODE && node.classList.contains(className) ) {
       els.push(node);
     }
 
     _.each(children, recursiveGet);
-  }
+  };
 
   recursiveGet(node);
 
