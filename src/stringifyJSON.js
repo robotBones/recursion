@@ -39,7 +39,7 @@
       case '[object Object]':
         result += '{';
         for (key in obj) {
-          if ( obj.hasOwnProperty([key]) ) {
+          if ( obj.hasOwnProperty(key) ) {
             val = obj[key];
             // functions and 'undefined' are not allowed in JSON
             if ( typeof val !== 'function' && typeof val !== 'undefined') {
