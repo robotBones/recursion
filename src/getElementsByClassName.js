@@ -4,23 +4,25 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className) {
+var getElementsByClassName = function(className, node, els) {
   // your code here
-  var els = [];
-  var node = document.body;
+  els = els || [];
+  node = node || document.body;
 
   // walking the dom
-  var recursiveGet = function(node) {
-    var children = node.childNodes;
+  var children = node.children;
+  console.log(children);
 
-    if ( node.nodeType === Node.ELEMENT_NODE && node.classList.contains(className) ) {
-      els.push(node);
-    }
+  if (node.classList.contains(className) ) {
+    els.push(node);
+  }
 
-    _.each(children, recursiveGet);
-  };
-
-  recursiveGet(node);
+  if(children.length > 0){
+    console.log(children.length);
+    _.each(children, function (node, index, children){
+      getElementsByClassName(className, node, els);
+    });
+  }
 
   return els;
 };
